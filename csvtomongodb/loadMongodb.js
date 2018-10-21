@@ -5,18 +5,25 @@ var csv = require('csvtojson');
 var {mongoose} = require('../db/mongoose');
 var {Battle} = require('../models/battle');
 
+function populateDatabase() {
     csv()
     .fromFile('./csvtomongodb/battles.csv')
     .then((jsonObj) => {
-        //require('fs').writeFileSync('./got.txt', JSON.stringify(jsonObj));    
-        if (Battle.count() === 0) {    
-            Battle.insertMany(jsonObj)
-            .then(()=>{
-                console.log('Databse Populated successfully');
-                process.exit(0);
-            });
-        } else {
-            console.log('database already populated');
-            process.exit(0);
-        }
+        Battle.count()
+        .then((count) => {
+            if (count === 0) {   
+                Battle.insertMany(jsonObj)
+                .then(() => {
+                    console.log('Databse Populated successfully');
+                })
+                .catch((err) => {
+                    console.log('Failed to populate database : ' + err);
+                });
+            } else {
+                console.log('database already populated');
+            }
+        });
     });
+}
+
+module.exports = populateDatabase;

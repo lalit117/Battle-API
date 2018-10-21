@@ -1,11 +1,13 @@
 
-require('../config/config');
+require('./config/config');
 
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const battleRoutes = require('../router/battleRoute');
-const {mongoose} = require('../db/mongoose');
+const battleRoutes = require('./router/battleRoute');
+const {mongoose} = require('./db/mongoose');
+const populateDB = require('./csvtomongodb/loadMongodb');
+populateDB();
 
 var app = express();
 
